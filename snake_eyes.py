@@ -13,6 +13,7 @@ async def roll(ctx, *args):
         faces = int(args[0][1:])
         if faces > 20:
             await ctx.send('Please make sure your number is between d1-20.\nThat means you *Ryan*')
+            return
         value = 0
         
         random.seed()
