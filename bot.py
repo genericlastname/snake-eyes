@@ -25,10 +25,10 @@ async def roll(ctx, *args):
         if faces == 20:
             # add pithy comments for critical success and failure
             if value == 20:
-                output = 'Critical success! A natural 20!'
+                output = '**Critical success!** A natural **20**!'
                 print(output)
             elif value == 1:
-                output = 'Critical failure! You rolled a 1!'
+                output = '**Critical failure!** You rolled a **1**!'
             else:
                 output = f'You rolled a...\n**{value}**'
 
