@@ -11,6 +11,8 @@ async def roll(ctx, *args):
     # if argument is a valid die
     if args[0][0] == 'd':
         faces = int(args[0][1:])
+        if faces > 20:
+            await ctx.send('Please make sure your number is between d1-20.\nThat means you *Ryan*')
         value = 0
         
         random.seed()
@@ -37,6 +39,11 @@ async def roll(ctx, *args):
 
         print(output)
         await ctx.send(output)
+    else:
+        await ctx.send(
+        '''Please format the command as !roll d{whatever}
+*Example:* !roll d20'''
+        )
 
 
 bot.run(TOKEN)
