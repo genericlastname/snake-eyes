@@ -1,13 +1,21 @@
+#!/usr/bin/env python
+
+'''This script provides a DnD dice rolling discord bot.'''
+
+import os
+import random
 import discord
 from discord.ext import commands
-import random
 
-client = discord.Client()
-TOKEN = 'NTc5MDg2Njg4Nzc3Nzk3NjQy.XN9EBw.AY3vl4svrZc_LPkglMkr3ohiJz8'
-bot = commands.Bot(command_prefix='!')
+CLIENT = discord.Client()
+TOKEN = os.environ['SNAKE_EYES_TOKEN']
+BOT = commands.Bot(command_prefix='!')
+random.seed()
 
-@bot.command()
+
+@BOT.command()
 async def roll(ctx, *args):
+    '''Rolls the dice.'''
     # if argument is a valid die
     if args[0][0] == 'd':
         faces = int(args[0][1:])
@@ -15,8 +23,7 @@ async def roll(ctx, *args):
             await ctx.send('Please make sure your number is between d1-20.\nThat means you *Ryan*')
             return
         value = 0
-        
-        random.seed()
+
         if faces != 00:
             # normal dice
             value = random.randint(1, faces)
@@ -42,9 +49,9 @@ async def roll(ctx, *args):
         await ctx.send(output)
     else:
         await ctx.send(
-        '''Please format the command as !roll d{whatever}
-*Example:* !roll d20'''
+            '''Please format the command as !roll d{whatever}
+            *Example:* !roll d20'''
         )
 
 
-bot.run(TOKEN)
+BOT.run(TOKEN)
