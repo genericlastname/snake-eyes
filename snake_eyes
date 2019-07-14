@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+'''This script provides a DnD dice rolling discord bot.'''
+
+import os
+import random
+import discord
+from discord.ext import commands
+
+CLIENT = discord.Client()
+TOKEN = os.environ['SNAKE_EYES_TOKEN']
+BOT = commands.Bot(command_prefix='!')
+random.seed()
+
+
+def simulate_roll(dice):
+    '''Takes in list of dice and returns list containing the rolls.'''
+    values = []
+    for die in dice:
+        values.append(random.randint(1, die))
+    return values
+
+
+def generate_message(faces, values):
+    '''Takes in the die and the roll value to generate messages.'''
+    output = ''
+    for i, value in enumerate(values):
+        if faces == 20:
+            # add pithy comments for critical success and failure
+            if value == 20:
+                output += '**Critical success!** A natural **20**!\n'
+            elif value == 1:
+                output += '**Critical failure!** You rolled a **1**!\n'
+            else:
+                output += f'You rolled a... **{value}**\n'
+        else:
+            if i > 0:
+                output += f'\t**{value}**'
+            else:
+                output += f'You rolled a... **{value}**'
+    return output
+
+
+@BOT.command()
+async def roll(ctx, *args):
+    '''Main function for bot.'''
+    amount = 0
+    faces = 0
+    if args[0][0] == 'd':
+        # if only 1 die is being rolled (ex. !roll d10).
+        amount = 1
+        faces = int(args[0][1:])
+    else:
+        # ex. !roll 3d10.
+        amount = int(args[0][0])
+        faces = int(args[0][2:])
+
+    if faces > 20:
+        await ctx.send('Please make sure your number is between d1-20.')
+
+    dice = []
+    for _ in range(amount):
+        dice.append(faces)
+    values = simulate_roll(dice)
+    message = generate_message(faces, values)
+    await ctx.send(message)
+
+
+BOT.run(TOKEN)
