@@ -10,11 +10,11 @@ from discord.ext import commands
 CLIENT = discord.Client()
 TOKEN = os.environ['SNAKE_EYES_TOKEN']
 BOT = commands.Bot(command_prefix='!')
-random.seed()
 
 
 def simulate_roll(dice):
     '''Takes in list of dice and returns list containing the rolls.'''
+    random.seed()
     values = []
     for die in dice:
         values.append(random.randint(1, die))
