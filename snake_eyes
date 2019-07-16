@@ -37,9 +37,9 @@ def generate_message(faces, values):
             if i == 0:
                 output += f'You rolled a... **{value}**'
             elif i == len(values) - 1:
-                output += f', a **{value}**'
-            else:
                 output += f', and a **{value}**'
+            else:
+                output += f', a **{value}**'
     return output
 
 
