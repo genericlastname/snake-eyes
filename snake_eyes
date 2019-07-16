@@ -39,7 +39,7 @@ def generate_message(faces, values):
             elif i == len(values) - 1:
                 output += f', and a **{value}**'
             else:
-                output += f', a **{value}**'
+                output += f', **{value}**'
     return output
 
 
