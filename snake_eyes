@@ -21,7 +21,7 @@ def simulate_roll(dice):
     return values
 
 
-def generate_message(faces, values):
+def generate_message(faces, values, percentile):
     '''Takes in the die and the roll value to generate messages.'''
     output = ''
     for i, value in enumerate(values):
@@ -40,6 +40,14 @@ def generate_message(faces, values):
                 output += f', and a **{value}**'
             else:
                 output += f', **{value}**'
+
+            if percentile:
+                # have to remove the last characters to get around ambiguous
+                # text rendering when more than 3 asterisks are placed
+                # together.
+                output = output[:-2]
+                output += '%**'
+
     return output
 
 
@@ -48,6 +56,8 @@ async def roll(ctx, *args):
     '''Main function for bot.'''
     amount = 0
     faces = 0
+    percentile = False
+
     if args[0][0] == 'd':
         # if only 1 die is being rolled (ex. !roll d10).
         amount = 1
@@ -57,6 +67,10 @@ async def roll(ctx, *args):
         amount = int(args[0][0])
         faces = int(args[0][2:])
 
+    if faces == 0:
+        faces = 10
+        percentile = True
+
     if faces > 20:
         await ctx.send('Please make sure your number is between d1-20.')
     else:
@@ -64,7 +78,7 @@ async def roll(ctx, *args):
         for _ in range(amount):
             dice.append(faces)
         values = simulate_roll(dice)
-        message = generate_message(faces, values)
+        message = generate_message(faces, values, percentile)
         await ctx.send(message)
 
 
