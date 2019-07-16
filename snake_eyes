@@ -59,13 +59,13 @@ async def roll(ctx, *args):
 
     if faces > 20:
         await ctx.send('Please make sure your number is between d1-20.')
-
-    dice = []
-    for _ in range(amount):
-        dice.append(faces)
-    values = simulate_roll(dice)
-    message = generate_message(faces, values)
-    await ctx.send(message)
+    else:
+        dice = []
+        for _ in range(amount):
+            dice.append(faces)
+        values = simulate_roll(dice)
+        message = generate_message(faces, values)
+        await ctx.send(message)
 
 
 BOT.run(TOKEN)
