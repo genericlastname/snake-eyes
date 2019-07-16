@@ -35,18 +35,16 @@ def generate_message(faces, values, percentile):
                 output += f'You rolled a... **{value}**\n'
         else:
             if i == 0:
-                output += f'You rolled a... **{value}**'
+                output += f'You rolled a... '
             elif i == len(values) - 1:
-                output += f', and a **{value}**'
+                output += f', and a '
             else:
-                output += f', **{value}**'
+                output += f', '
 
             if percentile:
-                # have to remove the last characters to get around ambiguous
-                # text rendering when more than 3 asterisks are placed
-                # together.
-                output = output[:-2]
-                output += '%**'
+                output += f'**{value*10}%**'
+            else:
+                output += f'**{value}**'
 
     return output
 
