@@ -83,6 +83,7 @@ def get_spell(name):
         page = requests.get(url)
         data = json.loads(page.text)
 
+        # TODO: Add materials variable.
         spell_name = data['name']
         level = data['level']
         rng = data['range']
@@ -95,6 +96,7 @@ def get_spell(name):
             alt = ''
         # classes = data['classes']
 
+        # TODO: Add a for loop to print classes.
         output = f'''\
         **{spell_name}**
         *Duration: {duration}, Range: {rng}, Concentration: {con}
@@ -142,7 +144,7 @@ async def roll(ctx, *args):
 async def spell(ctx, *args):
     '''Look up spell.'''
     message = get_spell(' '.join(args))
-    await ctx.send(message)
+    await ctx.send(message.replace('â€™', '\''))
 
 if __name__ == '__main__':
     BOT.run(TOKEN)
