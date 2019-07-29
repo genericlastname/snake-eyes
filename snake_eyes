@@ -59,7 +59,8 @@ def format_search(name):
     for num, token in enumerate(tokens):
         if num > 0:
             search += '+'
-        search += token.capitalize()
+        if token != 'of':
+            search += token.capitalize()
     return search
 
 
