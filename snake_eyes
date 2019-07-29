@@ -3,6 +3,9 @@
 '''This script provides a DnD dice rolling discord bot.'''
 
 import os
+import json
+import requests
+import textwrap
 import random
 import discord
 from discord.ext import commands
@@ -49,6 +52,61 @@ def generate_message(faces, values, percentile):
     return output
 
 
+def format_search(name):
+    '''Transforms user input into case-sensitive search format.'''
+    tokens = name.split()
+    search = ''
+    for num, token in enumerate(tokens):
+        if num > 0:
+            search += '+'
+        search += token.capitalize()
+    return search
+
+
+def get_info_url(name, resource):
+    '''Fetch info by searching `name` thru dnd5eapi.co.'''
+    base_url = 'http://dnd5eapi.co/api/' + resource + '/?name=' \
+        + format_search(name)
+    page = requests.get(base_url)
+    if page.status_code == 200:
+        data = json.loads(page.text)
+        if data['results']:
+            return data['results'][0]['url']
+    return ''
+
+
+def get_spell(name):
+    '''Return info about a given spell.'''
+    url = get_info_url(name, 'spells')
+    output = 'The spell you entered was not found.'
+    if url:
+        page = requests.get(url)
+        data = json.loads(page.text)
+
+        spell_name = data['name']
+        level = data['level']
+        rng = data['range']
+        duration = data['duration']
+        con = data['concentration']
+        desc = data['desc'][0]
+        try:
+            alt = data['higher_level'][0]
+        except KeyError:
+            alt = ''
+        # classes = data['classes']
+
+        output = f'''\
+        **{spell_name}**
+        *Duration: {duration}, Range: {rng}, Concentration: {con}
+        Level: {level}*
+        ---
+        {desc}
+        {alt}
+        '''
+
+    return textwrap.dedent(output)
+
+
 @BOT.command()
 async def roll(ctx, *args):
     '''Main function for bot.'''
@@ -80,4 +138,11 @@ async def roll(ctx, *args):
         await ctx.send(message)
 
 
-BOT.run(TOKEN)
+@BOT.command()
+async def spell(ctx, *args):
+    '''Look up spell.'''
+    message = get_spell(' '.join(args))
+    await ctx.send(message)
+
+if __name__ == '__main__':
+    BOT.run(TOKEN)
